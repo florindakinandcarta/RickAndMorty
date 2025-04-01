@@ -10,6 +10,7 @@ data class Character(
     val location: Location,
     val name: String,
     val origin: Origin,
+    val species: String,
     val status: CharacterStatus,
     val type: String
 ) {
