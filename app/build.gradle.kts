@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.example.rickandmorty"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.rickandmorty"
@@ -57,4 +57,5 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(project(":network"))
+    implementation(libs.coil.compose)
 }
