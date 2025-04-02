@@ -17,9 +17,15 @@ import com.example.rickandmorty.ui.screens.CharacterDetailsScreen
 import com.example.rickandmorty.ui.screens.CharacterEpisodeScreen
 import com.example.rickandmorty.ui.theme.RickAndMortyTheme
 import com.example.rickandmorty.ui.theme.RickPrimary
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private val ktorClient = KtorClient()
+
+    @Inject
+    lateinit var ktorClient: KtorClient
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
