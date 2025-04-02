@@ -4,7 +4,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -25,15 +24,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.SubcomposeAsyncImage
 import com.example.network.KtorClient
 import com.example.network.models.domain.Character
 import com.example.rickandmorty.ui.components.CharacterDetailsNamePlateComponent
+import com.example.rickandmorty.ui.components.CharacterImage
 import com.example.rickandmorty.ui.components.DataPoint
 import com.example.rickandmorty.ui.components.DataPointComponent
 import com.example.rickandmorty.ui.components.LoadingState
 import com.example.rickandmorty.ui.theme.RickAction
-import kotlinx.coroutines.delay
 
 @Composable
 fun CharacterDetailsScreen(
@@ -55,7 +53,7 @@ fun CharacterDetailsScreen(
                         add(DataPoint("Type", type))
                     }
                     add(DataPoint("Origin", character.origin.name))
-                    add(DataPoint("Episode count", character.episodeUrls.size.toString()))
+                    add(DataPoint("Episode count", character.episodeIds.size.toString()))
                 }
             }
         }
@@ -68,7 +66,7 @@ fun CharacterDetailsScreen(
                 character = it
             }
             .onFailure { exception ->
-
+                println(exception)
             }
 
     }
@@ -93,18 +91,7 @@ fun CharacterDetailsScreen(
             Spacer(modifier = Modifier.height(8.dp))
         }
         item {
-            SubcomposeAsyncImage(
-                model = character!!.imageUrl,
-                contentDescription = "Character Image",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(1f)
-                    .clip(RoundedCornerShape(12.dp)),
-                loading = {
-                    LoadingState()
-                },
-                onError = { println("Coil image load failed: ${it.result.throwable}") }
-            )
+            CharacterImage(imageUrl = character!!.imageUrl)
         }
         items(characterDataPoints) {
             Spacer(modifier = Modifier.height(32.dp))

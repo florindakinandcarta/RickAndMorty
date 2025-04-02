@@ -16,32 +16,33 @@ data class RemoteCharacter(
     val origin: Origin,
     val location: Location,
     val image: String,
-    val episode: ArrayList<String>,
+    val episode: List<String>,
     val url: String,
     val created: String
 )
-fun RemoteCharacter.toDomainCharacter():Character{
-    val characterGender = when(gender.lowercase()){
+
+fun RemoteCharacter.toDomainCharacter(): Character {
+    val characterGender = when (gender.lowercase()) {
         "female" -> CharacterGender.Female
         "male" -> CharacterGender.Male
         "genderless" -> CharacterGender.Genderless
         else -> CharacterGender.Unknown
     }
-    val characterStatus = when(status.lowercase()){
+    val characterStatus = when (status.lowercase()) {
         "alive" -> CharacterStatus.Alive
         "dead" -> CharacterStatus.Dead
         else -> CharacterStatus.Unknown
     }
     return Character(
         created = created,
-        episodeUrls = episode,
+        episodeIds = episode.map { it.substring(it.lastIndexOf("/") + 1).toInt() },
         gender = characterGender,
         id = id,
         imageUrl = image,
         location = Character.Location(name = location.name, url = location.url),
         name = name,
         origin = Character.Origin(name = origin.name, url = origin.url),
-        species= species,
+        species = species,
         status = characterStatus,
         type = type,
     )
