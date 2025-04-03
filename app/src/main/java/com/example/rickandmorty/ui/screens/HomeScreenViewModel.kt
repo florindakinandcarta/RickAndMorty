@@ -2,6 +2,7 @@ package com.example.rickandmorty.ui.screens
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.network.models.domain.CharacterPage
 import com.example.rickandmorty.repo.CharacterRepository
 import com.example.rickandmorty.states.HomeScreenViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,9 +20,14 @@ class HomeScreenViewModel @Inject constructor(
     private val _viewState = MutableStateFlow<HomeScreenViewState>(HomeScreenViewState.Loading)
     val viewState: StateFlow<HomeScreenViewState> = _viewState.asStateFlow()
 
+    private val fetchedCharacterPages = mutableListOf<CharacterPage>()
+
     fun fetchInitialPage() = viewModelScope.launch {
+        if (fetchedCharacterPages.isNotEmpty()) return@launch
         val initialPage = characterRepository.fetCharacterPage(page = 1)
         initialPage.onSuccess { characterPage ->
+            fetchedCharacterPages.clear()
+            fetchedCharacterPages.add(characterPage)
             _viewState.update {
                 return@update HomeScreenViewState.GridDisplay(characterPage.characters)
             }
@@ -30,8 +36,17 @@ class HomeScreenViewModel @Inject constructor(
         }
     }
 
-    fun fetchNextEpisode() {
+    fun fetchNextEpisode() = viewModelScope.launch {
+        val nextPageIndex = fetchedCharacterPages.size + 1
+        characterRepository.fetCharacterPage(page = nextPageIndex).onSuccess { characterPage ->
+            _viewState.update { currentState ->
+                val currentCharacters =
+                    (currentState as? HomeScreenViewState.GridDisplay)?.characters ?: emptyList()
+                return@update HomeScreenViewState.GridDisplay(characters = currentCharacters + characterPage.characters)
+            }
+        }.onFailure {
             //TODO
+        }
     }
 
 }

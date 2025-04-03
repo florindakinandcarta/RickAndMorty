@@ -39,14 +39,17 @@ class MainActivity : ComponentActivity() {
                 ) {
                     NavHost(navController = navController, startDestination = "home_screen") {
                         composable(route = "home_screen") {
-                            HomeScreen(onCharacterSelected = {
-                                //TODO navigate to different screen
+                            HomeScreen(onCharacterSelected = { characterId ->
+                                navController.navigate("character_details/$characterId")
                             })
                         }
-                        composable("character_details") {
-                            CharacterDetailsScreen(
-                                characterId = 24
-                            ) {
+                        composable(
+                            "character_details/{characterId}", arguments = listOf(
+                                navArgument("characterId") { type = NavType.IntType })
+                        ) { navBackStackEntry ->
+                            val characterId: Int =
+                                navBackStackEntry.arguments?.getInt("characterId") ?: -1
+                            CharacterDetailsScreen(characterId = characterId) {
                                 navController.navigate("character_episodes/$it")
                             }
                         }
