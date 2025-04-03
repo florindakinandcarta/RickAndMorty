@@ -14,112 +14,83 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.network.KtorClient
-import com.example.network.models.domain.Character
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.rickandmorty.states.CharacterDetailsViewState
 import com.example.rickandmorty.ui.components.CharacterDetailsNamePlateComponent
 import com.example.rickandmorty.ui.components.CharacterImage
-import com.example.rickandmorty.ui.components.DataPoint
 import com.example.rickandmorty.ui.components.DataPointComponent
 import com.example.rickandmorty.ui.components.LoadingState
 import com.example.rickandmorty.ui.theme.RickAction
 
 @Composable
 fun CharacterDetailsScreen(
-    ktorClient: KtorClient,
     characterId: Int,
+    viewModel: CharacterDetailsViewModel = hiltViewModel(),
     onEpisodeClicked: (Int) -> Unit
 ) {
-    var character by remember { mutableStateOf<Character?>(null) }
-    val characterDataPoints: List<DataPoint> by remember {
-        derivedStateOf {
-            buildList {
-                character?.let { character ->
-                    add(DataPoint("Last known location", character.location.name))
-                    add(DataPoint("Species", character.species))
-                    add(DataPoint("Gender", character.gender.displayName))
-                    character.type.takeIf {
-                        it.isNotEmpty()
-                    }?.let { type ->
-                        add(DataPoint("Type", type))
-                    }
-                    add(DataPoint("Origin", character.origin.name))
-                    add(DataPoint("Episode count", character.episodeIds.size.toString()))
-                }
-            }
-        }
-    }
-
+    val state by viewModel.stateFlow.collectAsState()
     LaunchedEffect(Unit) {
-        ktorClient
-            .getCharacter(characterId)
-            .onSuccess {
-                character = it
-            }
-            .onFailure { exception ->
-                println(exception)
-            }
-
+        viewModel.fetchCharacter(characterId)
     }
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(16.dp)
     ) {
-        if (character == null) {
-            item { LoadingState() }
-            return@LazyColumn
-        }
-        item {
-            Spacer(modifier = Modifier.height(12.dp))
-        }
-        item {
-            CharacterDetailsNamePlateComponent(
-                name = character!!.name,
-                status = character!!.status
-            )
-        }
-        item {
-            Spacer(modifier = Modifier.height(8.dp))
-        }
-        item {
-            CharacterImage(imageUrl = character!!.imageUrl)
-        }
-        items(characterDataPoints) {
-            Spacer(modifier = Modifier.height(32.dp))
-            DataPointComponent(dataPoint = it)
-        }
-        item { Spacer(modifier = Modifier.height(32.dp)) }
-        item {
-            Text(
-                text = "View all episodes",
-                color = RickAction,
-                fontSize = 18.sp,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .padding(horizontal = 32.dp)
-                    .border(
-                        width = 1.dp,
-                        color = RickAction,
-                        shape = RoundedCornerShape(12.dp)
-                    )
-                    .clip(RoundedCornerShape(12.dp))
-                    .clickable {
-                        onEpisodeClicked(characterId)
-                    }
-                    .padding(vertical = 8.dp)
-                    .fillMaxWidth()
-            )
-        }
-        item { Spacer(modifier = Modifier.height(64.dp)) }
-    }
+        when (val viewState = state) {
+            is CharacterDetailsViewState.Error -> TODO()
+            CharacterDetailsViewState.Loading -> item { LoadingState() }
+            is CharacterDetailsViewState.Success -> {
 
+                item {
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
+                item {
+                    CharacterDetailsNamePlateComponent(
+                        name = viewState.character.name,
+                        status = viewState.character.status
+                    )
+                }
+                item {
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+                item {
+                    CharacterImage(imageUrl = viewState.character.imageUrl)
+                }
+                items(viewState.characterDataPoint) {
+                    Spacer(modifier = Modifier.height(32.dp))
+                    DataPointComponent(dataPoint = it)
+                }
+                item { Spacer(modifier = Modifier.height(32.dp)) }
+                item {
+                    Text(
+                        text = "View all episodes",
+                        color = RickAction,
+                        fontSize = 18.sp,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .padding(horizontal = 32.dp)
+                            .border(
+                                width = 1.dp,
+                                color = RickAction,
+                                shape = RoundedCornerShape(12.dp)
+                            )
+                            .clip(RoundedCornerShape(12.dp))
+                            .clickable {
+                                onEpisodeClicked(characterId)
+                            }
+                            .padding(vertical = 8.dp)
+                            .fillMaxWidth()
+                    )
+                }
+                item { Spacer(modifier = Modifier.height(64.dp)) }
+            }
+        }
+    }
 }

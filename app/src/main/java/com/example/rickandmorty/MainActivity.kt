@@ -39,8 +39,7 @@ class MainActivity : ComponentActivity() {
                     NavHost(navController = navController, startDestination = "character_details") {
                         composable("character_details") {
                             CharacterDetailsScreen(
-                                ktorClient = ktorClient,
-                                characterId = 114
+                                characterId = 24
                             ) {
                                 navController.navigate("character_episodes/$it")
                             }
@@ -48,7 +47,8 @@ class MainActivity : ComponentActivity() {
                         composable("character_episodes/{characterId}", arguments = listOf(
                             navArgument("characterId") { type = NavType.IntType }
                         )) { navBackStackEntry ->
-                            val characterId: Int = navBackStackEntry.arguments?.getInt("characterId") ?: -1
+                            val characterId: Int =
+                                navBackStackEntry.arguments?.getInt("characterId") ?: -1
                             CharacterEpisodeScreen(
                                 characterId = characterId,
                                 ktorClient = ktorClient
