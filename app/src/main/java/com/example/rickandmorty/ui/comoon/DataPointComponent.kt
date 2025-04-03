@@ -1,4 +1,4 @@
-package com.example.rickandmorty.ui.components
+package com.example.rickandmorty.ui.comoon
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text

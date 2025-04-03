@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.network.models.domain.Character
+import com.example.rickandmorty.ui.comoon.CharacterImage
 import com.example.rickandmorty.ui.theme.RickAction
 
 @Composable

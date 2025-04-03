@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.rickandmorty.repo.CharacterRepository
 import com.example.rickandmorty.states.CharacterDetailsViewState
-import com.example.rickandmorty.ui.components.DataPoint
+import com.example.rickandmorty.ui.comoon.DataPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

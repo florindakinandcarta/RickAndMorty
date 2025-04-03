@@ -64,6 +64,7 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler )
     implementation(libs.hilt.android.navigation)
+    implementation(libs.androidx.material)
 }
 kapt {
     correctErrorTypes = true

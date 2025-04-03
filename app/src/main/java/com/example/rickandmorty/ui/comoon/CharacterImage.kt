@@ -1,4 +1,4 @@
-package com.example.rickandmorty.ui.components
+package com.example.rickandmorty.ui.comoon
 
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth

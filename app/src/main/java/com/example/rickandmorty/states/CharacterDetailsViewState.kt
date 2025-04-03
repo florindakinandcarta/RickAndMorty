@@ -1,7 +1,7 @@
 package com.example.rickandmorty.states
 
 import com.example.network.models.domain.Character
-import com.example.rickandmorty.ui.components.DataPoint
+import com.example.rickandmorty.ui.comoon.DataPoint
 
 sealed interface CharacterDetailsViewState {
     object Loading : CharacterDetailsViewState

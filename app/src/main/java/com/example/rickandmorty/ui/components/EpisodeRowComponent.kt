@@ -14,6 +14,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.network.models.domain.Episode
+import com.example.rickandmorty.ui.comoon.DataPoint
+import com.example.rickandmorty.ui.comoon.DataPointComponent
 import com.example.rickandmorty.ui.theme.RickTextPrimary
 
 

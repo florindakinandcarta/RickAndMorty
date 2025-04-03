@@ -5,8 +5,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -37,7 +39,11 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = RickPrimary
                 ) {
-                    NavHost(navController = navController, startDestination = "home_screen") {
+                    NavHost(
+                        navController = navController,
+                        startDestination = "home_screen",
+                        modifier = Modifier.padding(top = 32.dp)
+                    ) {
                         composable(route = "home_screen") {
                             HomeScreen(onCharacterSelected = { characterId ->
                                 navController.navigate("character_details/$characterId")
@@ -49,9 +55,13 @@ class MainActivity : ComponentActivity() {
                         ) { navBackStackEntry ->
                             val characterId: Int =
                                 navBackStackEntry.arguments?.getInt("characterId") ?: -1
-                            CharacterDetailsScreen(characterId = characterId) {
-                                navController.navigate("character_episodes/$it")
-                            }
+                            CharacterDetailsScreen(characterId = characterId,
+                                onBackClicked = {
+                                    navController.navigateUp()
+                                },
+                                onEpisodeClicked = {
+                                    navController.navigate("character_episodes/$it")
+                                })
                         }
                         composable("character_episodes/{characterId}", arguments = listOf(
                             navArgument("characterId") { type = NavType.IntType }
@@ -60,7 +70,10 @@ class MainActivity : ComponentActivity() {
                                 navBackStackEntry.arguments?.getInt("characterId") ?: -1
                             CharacterEpisodeScreen(
                                 characterId = characterId,
-                                ktorClient = ktorClient
+                                ktorClient = ktorClient,
+                                onBackClicked = {
+                                    navController.navigateUp()
+                                }
                             )
                         }
                     }

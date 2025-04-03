@@ -1,6 +1,7 @@
 package com.example.rickandmorty.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -16,8 +17,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.rickandmorty.states.HomeScreenViewState
+import com.example.rickandmorty.ui.comoon.LoadingState
+import com.example.rickandmorty.ui.comoon.SimpleToolbar
 import com.example.rickandmorty.ui.components.CharacterGridItem
-import com.example.rickandmorty.ui.components.LoadingState
 
 @Composable
 fun HomeScreen(
@@ -35,7 +37,8 @@ fun HomeScreen(
                 (viewState as? HomeScreenViewState.GridDisplay)?.characters?.size
                     ?: return@derivedStateOf false
             val lastDisplayIndex = scrollState.layoutInfo.visibleItemsInfo.lastOrNull()?.index
-            return@derivedStateOf lastDisplayIndex!! >= currentCharacterCount - 10
+                ?: return@derivedStateOf false
+            return@derivedStateOf lastDisplayIndex >= currentCharacterCount - 10
         }
     }
     LaunchedEffect(fetchNextPage) {
@@ -43,15 +46,18 @@ fun HomeScreen(
     }
     when (val state = viewState) {
         is HomeScreenViewState.GridDisplay -> {
-            LazyVerticalGrid(
-                contentPadding = PaddingValues(vertical = 42.dp, horizontal = 16.dp),
-                columns = GridCells.Fixed(2),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(items = state.characters, key = { it.id }) { character ->
-                    CharacterGridItem(modifier = Modifier, character = character) {
-                        onCharacterSelected(character.id)
+            Column {
+                SimpleToolbar(title = "All characters")
+                LazyVerticalGrid(
+                    contentPadding = PaddingValues(vertical = 16.dp, horizontal = 16.dp),
+                    columns = GridCells.Fixed(2),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(items = state.characters, key = { it.id }) { character ->
+                        CharacterGridItem(modifier = Modifier, character = character) {
+                            onCharacterSelected(character.id)
+                        }
                     }
                 }
             }

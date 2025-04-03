@@ -21,6 +21,9 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.network.models.domain.Character
+import com.example.rickandmorty.ui.comoon.CharacterImage
+import com.example.rickandmorty.ui.comoon.DataPoint
+import com.example.rickandmorty.ui.comoon.DataPointComponent
 import com.example.rickandmorty.ui.theme.RickAction
 
 @Composable
