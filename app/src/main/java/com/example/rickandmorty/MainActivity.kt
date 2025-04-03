@@ -15,6 +15,7 @@ import androidx.navigation.navArgument
 import com.example.network.KtorClient
 import com.example.rickandmorty.ui.screens.CharacterDetailsScreen
 import com.example.rickandmorty.ui.screens.CharacterEpisodeScreen
+import com.example.rickandmorty.ui.screens.HomeScreen
 import com.example.rickandmorty.ui.theme.RickAndMortyTheme
 import com.example.rickandmorty.ui.theme.RickPrimary
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,7 +37,12 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = RickPrimary
                 ) {
-                    NavHost(navController = navController, startDestination = "character_details") {
+                    NavHost(navController = navController, startDestination = "home_screen") {
+                        composable(route = "home_screen") {
+                            HomeScreen(onCharacterSelected = {
+                                //TODO navigate to different screen
+                            })
+                        }
                         composable("character_details") {
                             CharacterDetailsScreen(
                                 characterId = 24
