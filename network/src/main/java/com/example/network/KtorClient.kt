@@ -35,6 +35,7 @@ class KtorClient {
                 ignoreUnknownKeys = true
             })
         }
+        expectSuccess = true
     }
 
 

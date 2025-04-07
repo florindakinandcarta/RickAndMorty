@@ -30,7 +30,8 @@ import com.example.rickandmorty.ui.theme.RickAction
 fun CharacterListItem(
     character: Character,
     characterDataPoints: List<DataPoint>,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier
 ) {
     Row(
         modifier = Modifier
