@@ -1,4 +1,4 @@
-package com.example.rickandmorty.ui.screens
+package com.example.rickandmorty.screens
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -30,6 +30,7 @@ import com.example.rickandmorty.ui.comoon.LoadingState
 import com.example.rickandmorty.ui.comoon.SimpleToolbar
 import com.example.rickandmorty.ui.components.CharacterDetailsNamePlateComponent
 import com.example.rickandmorty.ui.theme.RickAction
+import com.example.rickandmorty.viewmodels.CharacterDetailsViewModel
 
 @Composable
 fun CharacterDetailsScreen(

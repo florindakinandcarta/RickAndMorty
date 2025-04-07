@@ -30,9 +30,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.network.KtorClient
-import com.example.rickandmorty.ui.screens.CharacterDetailsScreen
-import com.example.rickandmorty.ui.screens.CharacterEpisodeScreen
-import com.example.rickandmorty.ui.screens.HomeScreen
+import com.example.rickandmorty.screens.AllEpisodesScreen
+import com.example.rickandmorty.screens.CharacterDetailsScreen
+import com.example.rickandmorty.screens.CharacterEpisodeScreen
+import com.example.rickandmorty.screens.HomeScreen
 import com.example.rickandmorty.ui.theme.RickAction
 import com.example.rickandmorty.ui.theme.RickAndMortyTheme
 import com.example.rickandmorty.ui.theme.RickPrimary
@@ -51,7 +52,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             val items = listOf(
-                NavDestination.Home, NavDestination.Search, NavDestination.Episodes
+                NavDestination.Home, NavDestination.Episodes, NavDestination.Search
             )
             var selectedIndex by remember {
                 mutableIntStateOf(0)
@@ -135,13 +136,10 @@ class MainActivity : ComponentActivity() {
 
                         composable(route = NavDestination.Episodes.route) {
                             Column(
-                                modifier = Modifier.fillMaxSize(),
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.CenterHorizontally
+                                modifier = Modifier.fillMaxSize()
                             ) {
-                                Text("Episodes", fontSize = 62.sp, color = Color.White)
+                                AllEpisodesScreen()
                             }
-
                         }
                         composable(route = NavDestination.Search.route) {
                             Column(
@@ -151,7 +149,6 @@ class MainActivity : ComponentActivity() {
                             ) {
                                 Text("Search", fontSize = 62.sp, color = Color.White)
                             }
-
                         }
                     }
                 }

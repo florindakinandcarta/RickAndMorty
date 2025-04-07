@@ -1,4 +1,4 @@
-package com.example.rickandmorty.ui.screens
+package com.example.rickandmorty.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,6 +20,7 @@ import com.example.rickandmorty.states.HomeScreenViewState
 import com.example.rickandmorty.ui.comoon.LoadingState
 import com.example.rickandmorty.ui.comoon.SimpleToolbar
 import com.example.rickandmorty.ui.components.CharacterGridItem
+import com.example.rickandmorty.viewmodels.HomeScreenViewModel
 
 @Composable
 fun HomeScreen(
