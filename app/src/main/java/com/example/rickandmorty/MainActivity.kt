@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -19,10 +18,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -34,6 +31,7 @@ import com.example.rickandmorty.screens.AllEpisodesScreen
 import com.example.rickandmorty.screens.CharacterDetailsScreen
 import com.example.rickandmorty.screens.CharacterEpisodeScreen
 import com.example.rickandmorty.screens.HomeScreen
+import com.example.rickandmorty.screens.SearchScreen
 import com.example.rickandmorty.ui.theme.RickAction
 import com.example.rickandmorty.ui.theme.RickAndMortyTheme
 import com.example.rickandmorty.ui.theme.RickPrimary
@@ -142,13 +140,7 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                         composable(route = NavDestination.Search.route) {
-                            Column(
-                                modifier = Modifier.fillMaxSize(),
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Text("Search", fontSize = 62.sp, color = Color.White)
-                            }
+                            SearchScreen()
                         }
                     }
                 }

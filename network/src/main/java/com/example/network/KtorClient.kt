@@ -58,12 +58,48 @@ class KtorClient {
         }
     }
 
-    suspend fun getCharacterByPage(pageNumber: Int): ApiOperation<CharacterPage> {
+    suspend fun getCharacterByPage(
+        pageNumber: Int,
+        queryParams: Map<String, String>
+    ): ApiOperation<CharacterPage> {
         return safeApiCall {
-            client.get("character/?page=$pageNumber")
+            client.get("character") {
+                url {
+                    parameters.append("page", pageNumber.toString())
+                    queryParams.forEach { parameters.append(it.key, it.value) }
+                }
+            }
                 .body<RemoteCharacterPage>()
                 .toDomainCharacterPage()
         }
+    }
+
+    suspend fun searchAllCharactersByName(searchQuery: String): ApiOperation<List<Character>> {
+        val data = mutableListOf<Character>()
+        var exception: Exception? = null
+        getCharacterByPage(
+            pageNumber = 1,
+            queryParams = mapOf("name" to searchQuery)
+        ).onSuccess { firstPage ->
+            val totalPageCount = firstPage.info.pages
+            data.addAll(firstPage.characters)
+            repeat(totalPageCount - 1) { index ->
+                getCharacterByPage(
+                    pageNumber = index + 2,
+                    queryParams = mapOf("name" to searchQuery)
+                ).onSuccess { nextPage ->
+                    data.addAll(nextPage.characters)
+                }.onFailure { error ->
+                    exception = error
+                }
+                if (exception != null) {
+                    return@onSuccess
+                }
+            }
+        }.onFailure {
+            exception = it
+        }
+        return exception?.let { ApiOperation.Failure(it) } ?: ApiOperation.Success(data)
     }
 
     suspend fun getEpisodes(episodeIds: List<Int>): ApiOperation<List<Episode>> {
@@ -106,7 +142,7 @@ class KtorClient {
                     exception = error
                 }
 
-                if (exception == null) {
+                if (exception != null) {
                     return@onSuccess
                 }
             }
