@@ -34,6 +34,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
@@ -51,7 +52,8 @@ import com.example.rickandmorty.viewmodels.SearchViewModel
 
 @Composable
 fun SearchScreen(
-    searchViewModel: SearchViewModel = hiltViewModel()
+    searchViewModel: SearchViewModel = hiltViewModel(),
+    onCharacterClicked: (Int) -> Unit,
 ) {
     DisposableEffect(Unit) {
         val job = searchViewModel.observeUserSearch()
@@ -113,7 +115,8 @@ fun SearchScreen(
             is SearchViewModel.ScreenState.Content -> {
                 SearchScreenContent(
                     content = state,
-                    onStatusClicked = searchViewModel::toggleStatus
+                    onStatusClicked = searchViewModel::toggleStatus,
+                    onCharacterClicked = { onCharacterClicked(it) }
                 )
             }
 
@@ -164,7 +167,8 @@ fun SearchScreen(
 @Composable
 private fun SearchScreenContent(
     content: SearchViewModel.ScreenState.Content,
-    onStatusClicked: (CharacterStatus) -> Unit
+    onStatusClicked: (CharacterStatus) -> Unit,
+    onCharacterClicked: (Int) -> Unit
 ) {
     Text(
         text = "${content.results.size} results for '${content.userQuery}'",
@@ -173,11 +177,63 @@ private fun SearchScreenContent(
             .padding(start = 16.dp, bottom = 4.dp),
         fontSize = 14.sp
     )
-    Row(
-        modifier = Modifier.padding(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-
+    StatusFilterRow(content = content, onStatusClicked)
+    Box() {
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 24.dp, top = 8.dp),
+            modifier = Modifier.clipToBounds()
         ) {
+            val filteredResults =
+                content.results.filter { content.filterState.selectedStatuses.contains(it.status) }
+            items(items = filteredResults, key = { character -> character.id }) { character ->
+                val dataPoints = buildList {
+                    add(DataPoint("Last known location", character.location.name))
+                    add(DataPoint("Species", character.species))
+                    add(DataPoint("Gender", character.gender.displayName))
+                    character.type.takeIf {
+                        it.isNotEmpty()
+                    }?.let { type ->
+                        add(DataPoint("Type", type))
+                    }
+                    add(DataPoint("Origin", character.origin.name))
+                    add(DataPoint("Episode count", character.episodeIds.size.toString()))
+                }
+                CharacterListItem(
+                    character = character,
+                    characterDataPoints = dataPoints,
+                    onClick = {
+                        onCharacterClicked(character.id)
+                    },
+                    modifier = Modifier.animateItem()
+                )
+            }
+        }
+        Spacer(
+            modifier = Modifier
+                .height(8.dp)
+                .fillMaxWidth()
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            RickPrimary, Color.Transparent
+                        )
+                    )
+                )
+        )
+    }
+}
+
+
+@Composable
+private fun StatusFilterRow(
+    content: SearchViewModel.ScreenState.Content,
+    onStatusClicked: (CharacterStatus) -> Unit
+) {
+    Row(
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 4.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
         content.filterState.statuses.forEach { status ->
             val isSelected = content.filterState.selectedStatuses.contains(status)
             val contentColor = if (isSelected) RickAction else Color.LightGray
@@ -201,8 +257,7 @@ private fun SearchScreenContent(
                     modifier = Modifier
                         .background(color = contentColor)
                         .padding(4.dp),
-                    textAlign = TextAlign.Center,
-                    fontSize = 22.sp
+                    textAlign = TextAlign.Center
                 )
                 Text(
                     text = status.displayName,
@@ -212,48 +267,5 @@ private fun SearchScreenContent(
                 )
             }
         }
-    }
-    Box() {
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 24.dp),
-        ) {
-            val filteredResults =
-                content.results.filter { content.filterState.selectedStatuses.contains(it.status) }
-            items(items = filteredResults, key = { character -> character.id }) { character ->
-                val dataPoints = buildList {
-                    add(DataPoint("Last known location", character.location.name))
-                    add(DataPoint("Species", character.species))
-                    add(DataPoint("Gender", character.gender.displayName))
-                    character.type.takeIf {
-                        it.isNotEmpty()
-                    }?.let { type ->
-                        add(DataPoint("Type", type))
-                    }
-                    add(DataPoint("Origin", character.origin.name))
-                    add(DataPoint("Episode count", character.episodeIds.size.toString()))
-                }
-                CharacterListItem(
-                    character = character,
-                    characterDataPoints = dataPoints,
-                    onClick = {
-                        //TODO
-                    },
-                    modifier = Modifier.animateItem()
-                )
-            }
-        }
-        Spacer(
-            modifier = Modifier
-                .height(9.dp)
-                .fillMaxWidth()
-                .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            RickPrimary, Color.Transparent
-                        )
-                    )
-                )
-        )
     }
 }
