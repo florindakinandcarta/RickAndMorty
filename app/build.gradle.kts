@@ -52,6 +52,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     testImplementation(libs.junit)
+    testImplementation(libs.junit.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
@@ -65,6 +66,10 @@ dependencies {
     kapt(libs.hilt.android.compiler )
     implementation(libs.hilt.android.navigation)
     implementation(libs.androidx.material)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation (libs.mockk)
+    testImplementation( libs.kotlinx.coroutines.test.v173)
+
 }
 kapt {
     correctErrorTypes = true

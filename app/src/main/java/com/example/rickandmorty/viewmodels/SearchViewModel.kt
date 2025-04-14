@@ -80,11 +80,11 @@ class SearchViewModel @Inject constructor(
     fun toggleStatus(status: CharacterStatus) {
         _uiState.update {
             val currentState = (it as? ScreenState.Content) ?: return@update it
-            val currentSelectedStatueses = currentState.filterState.selectedStatuses
-            val newStatuses = if (currentSelectedStatueses.contains(status)) {
-                currentSelectedStatueses - status
+            val currentSelectedStatuses = currentState.filterState.selectedStatuses
+            val newStatuses = if (currentSelectedStatuses.contains(status)) {
+                currentSelectedStatuses - status
             } else {
-                currentSelectedStatueses + status
+                currentSelectedStatuses + status
             }
             return@update currentState.copy(
                 filterState = currentState.filterState.copy(selectedStatuses = newStatuses)
