@@ -69,6 +69,10 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation (libs.mockk)
     testImplementation( libs.kotlinx.coroutines.test.v173)
+    testImplementation (libs.turbine)
+    testImplementation (libs.mockito.core)
+    testImplementation(libs.mockitoKotlin)
+    testImplementation("org.mockito:mockito-inline:4.1.0")
 
 }
 kapt {
