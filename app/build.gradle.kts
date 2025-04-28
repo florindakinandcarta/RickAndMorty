@@ -39,6 +39,18 @@ android {
     buildFeatures {
         compose = true
     }
+    testOptions {
+        unitTests {
+            all {
+                // Add jvmArgs here for unit tests
+                it.jvmArgs("-XX:+EnableDynamicAgentLoading")
+                it.testLogging {
+                    events("passed", "failed", "skipped", "standardOut", "standardError")
+                    showStandardStreams = true
+                }
+            }
+        }
+    }
 }
 
 dependencies {
@@ -52,7 +64,6 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     testImplementation(libs.junit)
-    testImplementation(libs.junit.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
@@ -61,16 +72,16 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(project(":network"))
     implementation(libs.coil.compose)
-    implementation (libs.androidx.navigation.compose)
+    implementation(libs.androidx.navigation.compose)
     implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler )
+    kapt(libs.hilt.android.compiler)
     implementation(libs.hilt.android.navigation)
     implementation(libs.androidx.material)
     testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation (libs.mockk)
-    testImplementation( libs.kotlinx.coroutines.test.v173)
-    testImplementation (libs.turbine)
-    testImplementation (libs.mockito.core)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test.v173)
+    testImplementation(libs.turbine)
+    testImplementation(libs.mockito.core)
     testImplementation(libs.mockitoKotlin)
     testImplementation("org.mockito:mockito-inline:4.1.0")
 
