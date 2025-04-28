@@ -11,7 +11,7 @@ open class CharacterRepository @Inject constructor(private val ktorClient: KtorC
         return ktorClient.getCharacter(characterId)
     }
 
-    suspend fun fetCharacterPage(
+    suspend fun fetchCharacterPage(
         page: Int,
         params: Map<String, String> = emptyMap()
     ): ApiOperation<CharacterPage> {

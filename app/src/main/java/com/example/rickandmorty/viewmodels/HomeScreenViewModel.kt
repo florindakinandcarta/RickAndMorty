@@ -24,7 +24,7 @@ class HomeScreenViewModel @Inject constructor(
 
     fun fetchInitialPage() = viewModelScope.launch {
         if (fetchedCharacterPages.isNotEmpty()) return@launch
-        val initialPage = characterRepository.fetCharacterPage(page = 1)
+        val initialPage = characterRepository.fetchCharacterPage(page = 1)
         initialPage.onSuccess { characterPage ->
             fetchedCharacterPages.clear()
             fetchedCharacterPages.add(characterPage)
@@ -38,7 +38,7 @@ class HomeScreenViewModel @Inject constructor(
 
     fun fetchNextEpisode() = viewModelScope.launch {
         val nextPageIndex = fetchedCharacterPages.size + 1
-        characterRepository.fetCharacterPage(page = nextPageIndex).onSuccess { characterPage ->
+        characterRepository.fetchCharacterPage(page = nextPageIndex).onSuccess { characterPage ->
             _viewState.update { currentState ->
                 val currentCharacters =
                     (currentState as? HomeScreenViewState.GridDisplay)?.characters ?: emptyList()
