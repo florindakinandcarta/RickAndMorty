@@ -3,7 +3,9 @@ package com.example.rickandmorty.viewmodels
 import com.example.network.ApiOperation
 import com.example.network.KtorClient
 import com.example.network.models.domain.Character
+import com.example.network.models.domain.CharacterGender
 import com.example.network.models.domain.CharacterPage
+import com.example.network.models.domain.CharacterStatus
 import com.example.rickandmorty.repo.CharacterRepository
 import com.example.rickandmorty.states.HomeScreenViewState
 import kotlinx.coroutines.Dispatchers
@@ -91,8 +93,59 @@ class HomeScreenViewModelTest {
     }
 
     @Test
-    fun fetchInitialPage_showsError(){
+    fun fetchNextEpisode_showsLoading_thenSuccess_withNewCharacters() {
+        runTest {
+            val fakeInfo = CharacterPage.Info(
+                count = 1,
+                pages = 1,
+                next = null,
+                prev = null
+            )
+            val fakeCharacters = listOf(
+                Character(
+                    id = 1,
+                    name = "Rick Sanchez",
+                    species = "Human",
+                    gender = CharacterGender.Male,
+                    type = "Scientist",
+                    origin = Character.Origin(name = "Earth", url = "wert"),
+                    location = Character.Location(name = "Citadel of Ricks", url = "wert"),
+                    episodeIds = listOf(1, 2, 3),
+                    imageUrl = "wertrew",
+                    created = "23er",
+                    status = CharacterStatus.Alive
+                ),
+                Character(
+                    id = 2,
+                    name = "Rick Sanchez",
+                    species = "Human",
+                    gender = CharacterGender.Male,
+                    type = "Scientist",
+                    origin = Character.Origin(name = "Earth", url = "wert"),
+                    location = Character.Location(name = "Citadel of Ricks", url = "wert"),
+                    episodeIds = listOf(1, 2, 3),
+                    imageUrl = "wertrew",
+                    created = "23er",
+                    status = CharacterStatus.Alive
+                )
+            )
+            val fakeCharacterPage = CharacterPage(
+                info = fakeInfo,
+                characters = fakeCharacters
+            )
 
+            whenever(characterRepository.fetchCharacterPage(1)).thenReturn(
+                ApiOperation.Success(
+                    fakeCharacterPage
+                )
+            )
+            homeScreenViewModel.fetchNextEpisode()
+            assertEquals(HomeScreenViewState.Loading, homeScreenViewModel.viewState.value)
+
+            testDispatcher.scheduler.advanceUntilIdle()
+
+            val state = homeScreenViewModel.viewState.value as HomeScreenViewState.GridDisplay
+            assertEquals(fakeCharacters, state.characters)
+        }
     }
-
 }
