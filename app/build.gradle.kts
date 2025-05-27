@@ -51,6 +51,11 @@ android {
             }
         }
     }
+    packagingOptions {
+        resources {
+            excludes += arrayOf("META-INF/LICENSE*", "META-INF/NOTICE*", "META-INF/DEPENDENCIES")
+        }
+    }
 }
 
 dependencies {
@@ -82,8 +87,20 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test.v173)
     testImplementation(libs.turbine)
     testImplementation(libs.mockito.core)
+    androidTestImplementation("io.mockk:mockk-android:1.13.5")
     testImplementation(libs.mockitoKotlin)
+    androidTestImplementation(libs.mockitoKotlin)
     testImplementation("org.mockito:mockito-inline:4.1.0")
+    androidTestImplementation("org.mockito:mockito-inline:4.1.0")
+    testImplementation(libs.hilt.android.testing)
+    androidTestImplementation(libs.hilt.android.testing)
+    androidTestImplementation("androidx.navigation:navigation-testing:2.8.6")
+    // ...with Kotlin.
+    kaptTest(libs.hilt.android.compiler)
+
+
+    androidTestImplementation ("com.google.dagger:hilt-android-testing:2.51.1")
+    kaptAndroidTest ("com.google.dagger:hilt-android-compiler:2.51.1")
 
 }
 kapt {

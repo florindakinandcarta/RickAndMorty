@@ -58,6 +58,7 @@ mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore
 mockitoKotlin = { module = "org.mockito.kotlin:mockito-kotlin", version = "4.1.0" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
+hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hiltAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
